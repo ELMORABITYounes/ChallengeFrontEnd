@@ -7,6 +7,9 @@
         <li *ngIf="authService.isUser()" class="nav-item">
           <a routerLink="/shops"  routerLinkActive="active" style="font-weight: 600;" class="nav-link">NearBy Shops</a>
         </li>
+        <li *ngIf="authService.isUser()" class="nav-item">
+          <a routerLink="/liked-shops"  routerLinkActive="active" style="font-weight: 600;" class="nav-link">My Preferred Shops</a>
+        </li>
         <li *ngIf="!authService.isUser()" class="nav-item">
           <a routerLink="/login"  class="btn btn-danger">Login</a>
         </li>
@@ -18,7 +21,10 @@
 
     <div *ngIf="authService.isUser()">
       <ul class="navbar-nav ml-auto">
-        <button class="btn btn-danger my-2 my-sm-0" (click)="onLogout()">Logout</button>
+        <li class="nav-item ">
+          <a class="nav-link active" style="font-weight: 600;">{{authService.getUsername()}}</a>
+        </li>
+        <li><button class="btn btn-danger my-2 my-sm-0" (click)="onLogout()">Logout</button></li>
       </ul>
     </div>
   </div>

@@ -31,10 +31,27 @@ export class AuthenticationService {
     if (!this.isAuthenticated()){
       return false
     }
+    this.refresh()
     for(let r of this.roles){
       if(r.authority==="USER") return true;
     }
     return false;
+  }
+
+  getUsername(){
+    const jwt = localStorage.getItem('token');
+    let jwtHelper=new JwtHelperService();
+    return jwtHelper.decodeToken(jwt).sub;
+  }
+
+  refresh(){
+    const jwt = localStorage.getItem('token');
+    let jwtHelper=new JwtHelperService();
+    this.roles=jwtHelper.decodeToken(jwt).roles;
+  }
+
+  getToken(){
+    return localStorage.getItem('token')
   }
 
   public isAuthenticated(): boolean {
@@ -44,7 +61,6 @@ export class AuthenticationService {
     // Check whether the token is expired and return
     // true or false
     let jwtHelper=new JwtHelperService();
-
     return !jwtHelper.isTokenExpired(token);
   }
 
