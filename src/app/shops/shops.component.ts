@@ -78,13 +78,16 @@ export class ShopsComponent implements OnInit {
             if (this.likedShops.indexOf(item.venue.id)==-1 ) {
               let dislikedIndex=this.isDisliked(item.venue.id);
               if(dislikedIndex != -1){
-                console.log(this.dislikedShops[dislikedIndex].date)
                 if (!this.differenceSmallerThanTwo(this.dislikedShops[dislikedIndex].date))
                 {
                   let theShop = new Shop(item.venue.id, item.venue.name, item.venue.location.distance);
                   this.shopService.setShopImage(theShop);
                   this.shops.push(theShop);
-                  this.shopService.removeDislikedShop(theShop.id)
+                  this.shopService.removeDislikedShop(theShop.id).subscribe(
+                    resp=>{
+                    },error1 =>{
+                      alert("an error has occurred please check your connection")
+                    })
                 }
               }else {
                 let theShop = new Shop(item.venue.id, item.venue.name, item.venue.location.distance);
@@ -132,8 +135,9 @@ export class ShopsComponent implements OnInit {
   
   differenceSmallerThanTwo(date){
     let dateNow=new Date();
-    let diffInHours=(dateNow.getMilliseconds() - Date.parse(date))/ 1000 / 60 / 60;
-    if (diffInHours>2){
+    var dislikedDate = new Date(date);
+    let diffInHours=(dateNow.getTime() - dislikedDate.getTime())/ 1000 / 60 / 60;
+    if (Math.ceil(diffInHours)>2){
       return false;
     } else
       return true;

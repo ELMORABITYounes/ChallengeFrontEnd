@@ -1,6 +1,23 @@
 # ChallengeFrontEnd
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6 and it is the back-end part of United Remote web challenge.
+
+The project basically calculate the user Location after his permission then display the nearby shops sorted by distance and the user can like or dislike those shops.
+
+The project uses the [FourSquare api](https://developer.foursquare.com/) to get the nearby shops and communicate with the [back-end part](https://github.com/ELMORABITYounes/ChallengeBackEnd) through ``http://localhost:8080/`` to handle the user authentication with JWT and for saving or removing liked/disliked shops and also for user registration.
+
+## FourSquare Api
+
+the [FourSquare api](https://developer.foursquare.com/) exposes some rest endpoints for searching nearby venues and for getting details about those venues and it does not require a billing account like google places api but it is less flexible.
+
+in this project I am using a sandbox account witch has this limitations:
+* 950 Regular Calls / Day
+* 50 Premium Calls / Day
+* 1 Photo per Venue
+
+witch explains why you won't get photos for the shops most of the time.
+
+the api gives you a client id and a secret id to identify your app.
 
 ## Development server
 
