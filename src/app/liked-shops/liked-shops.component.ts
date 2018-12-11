@@ -25,11 +25,14 @@ export class LikedShopsComponent implements OnInit {
         this.shopService.getShopDetails(likedShop.reference).subscribe(
           resp=>{
             let item:any=resp
-            let theShop = new Shop(item.response.venue.id, item.response.venue.id.name, 0);
+            let theShop = new Shop(item.response.venue.id, item.response.venue.name, 0);
             this.shopService.setShopImage(theShop);
             this.likedShops.push(theShop);
           },
           error1 =>{
+            if (error1.status == 429) {
+              this.error = 'requests limit reached'
+            }else
             this.error = 'an error has occurred please check your connection'
           }
       )
@@ -41,11 +44,11 @@ export class LikedShopsComponent implements OnInit {
   }
 
   onRemove(reference,index){
-    this.shopService.removeLikedShope(reference).subscribe(
+    this.shopService.removeLikedShop(reference).subscribe(
       resp=>{
         this.likedShops.splice(index ,1)
       },error1 =>{
-        alert("an error has occurred please check your connection")
+          alert("an error has occurred please check your connection")
       }
     )
   }

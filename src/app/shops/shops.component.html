@@ -8,12 +8,12 @@
         <div class="row">
           <div *ngFor="let shop of shops;let i=index" class="col-md-3">
             <div class="card">
-              <div class="card-header text-white bg-primary mb-3">{{shop.name}}</div>
+              <div class="card-header text-white bg-primary mb-3">{{shop.name}} <span class="badge badge-warning">{{shop.distance}}m</span></div>
               <div class="card-body">
                 <p class="row"><img class="col-12" style="max-height: 220px" src="{{shop.imageUrl}}"></p>
               </div>
               <div class="card-footer bg-transparent border-light text-center">
-                <button class="btn btn-danger" style="margin-right: 5px">Dislike</button>
+                <button class="btn btn-danger" (click)="onDisLike(shop.id,i)" style="margin-right: 5px">Dislike</button>
                 <button class="btn btn-success" (click)="onLike(shop.id,i)" style="margin-left: 5px">Like</button>
               </div>
             </div>

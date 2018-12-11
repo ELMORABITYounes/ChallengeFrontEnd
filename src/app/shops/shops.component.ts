@@ -12,21 +12,28 @@ export class ShopsComponent implements OnInit {
 
   shops: Array<Shop> = [];
   likedShops: Array<string> = [];
+  dislikedShops: Array<any> = [];
   error: any = null;
-  loading:number=1
+  loading:number=1;
 
   constructor(private shopService: ShopService, public authService: AuthenticationService) {
   }
 
   ngOnInit() {
-    this.getLocation()
+    if (ShopService.position==null){
+      this.getLocation()
+    } else
+      this.locationSuccessHandler(ShopService.position)
+
   }
 
   getLocation() {
     if (window.navigator && window.navigator.geolocation) {
        window.navigator.geolocation.getCurrentPosition(
         position => {
+          console.log("position catlculated")
           this.locationSuccessHandler(position);
+          ShopService.position=position
         },
         error => {
           switch (error.code) {
@@ -34,7 +41,7 @@ export class ShopsComponent implements OnInit {
               this.error = 'Couldn\'t get your location Permission Denied';
               break;
             default:
-              this.error = 'Location Unavailable Please Check Your Connexion!';
+              this.error = 'Location Unavailable Please Check Your internet connexion!';
               break;
           }
         }
@@ -48,9 +55,17 @@ export class ShopsComponent implements OnInit {
       for (let likedShop of tmp) {
         this.likedShops.push(likedShop.reference);
       }
-      this.getNearbyShops(position.coords.latitude, position.coords.longitude);
+      this.shopService.getDislikedShops(this.authService.getUsername()).subscribe(resp => {
+        let tmp:any=resp;
+        for (let dislikedShop of tmp) {
+          this.dislikedShops.push({reference:dislikedShop.reference,date:dislikedShop.date});
+        }
+        this.getNearbyShops(position.coords.latitude, position.coords.longitude);
+      }, error1 => {
+        this.error = 'an error has occurred please check your internet connexion';
+      });
     }, error1 => {
-      this.error = 'an error has occurred please check your connection';
+      this.error = 'an error has occurred please check your internet connexion';
     });
   }
 
@@ -60,31 +75,68 @@ export class ShopsComponent implements OnInit {
           this.loading=0
           let tmp: any = resp;
           for (let item of tmp.response.groups[0].items) {
-            if (this.likedShops.indexOf(item.venue.id)==-1) {
-              let theShop = new Shop(item.venue.id, item.venue.name, item.venue.location.distance);
-              this.shopService.setShopImage(theShop);
-              this.shops.push(theShop);
+            if (this.likedShops.indexOf(item.venue.id)==-1 ) {
+              let dislikedIndex=this.isDisliked(item.venue.id);
+              if(dislikedIndex != -1){
+                console.log(this.dislikedShops[dislikedIndex].date)
+                if (!this.differenceSmallerThanTwo(this.dislikedShops[dislikedIndex].date))
+                {
+                  let theShop = new Shop(item.venue.id, item.venue.name, item.venue.location.distance);
+                  this.shopService.setShopImage(theShop);
+                  this.shops.push(theShop);
+                  this.shopService.removeDislikedShop(theShop.id)
+                }
+              }else {
+                let theShop = new Shop(item.venue.id, item.venue.name, item.venue.location.distance);
+                this.shopService.setShopImage(theShop);
+                this.shops.push(theShop);
+              }
             }
           }
           this.shops.sort((a,b) => a.distance - b.distance);
-          console.log(this.shops)
         },
         error1 => (
-          this.error = 'an error has occurred please check your connection'
+          this.error = 'an error has occurred please check your internet connexion'
         )
       );
   }
 
   onLike(reference,index){
-    console.log(index)
-    console.log(reference)
     this.shopService.likeShope(reference,this.authService.getUsername()).subscribe(
       resp=>{
         this.shops.splice(index ,1)
       },error1 =>{
-        alert("an error has occurred please check your connection")
+        alert("an error has occurred please check your internet connexion")
       }
     )
+  }
+
+  onDisLike(reference,index){
+    this.shopService.dislikeShop(reference).subscribe(
+      resp=>{
+        this.shops.splice(index ,1)
+      },error1 =>{
+        alert("an error has occurred please check your internet connexion")
+      }
+    )
+  }
+  
+  isDisliked(reference){
+    let length=this.dislikedShops.length;
+    for(let i=0;i<length;i++) {
+      if (this.dislikedShops[i].reference==reference)
+        return i
+    }
+    return -1
+  }
+  
+  differenceSmallerThanTwo(date){
+    let dateNow=new Date();
+    let diffInHours=(dateNow.getMilliseconds() - Date.parse(date))/ 1000 / 60 / 60;
+    if (diffInHours>2){
+      return false;
+    } else
+      return true;
   }
 
 }
