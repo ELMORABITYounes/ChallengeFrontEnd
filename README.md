@@ -6,6 +6,13 @@ The project basically calculate the user Location after his permission then disp
 
 The project uses the [FourSquare api](https://developer.foursquare.com/) to get the nearby shops and communicate with the [back-end part](https://github.com/ELMORABITYounes/ChallengeBackEnd) through ``http://localhost:8080/`` to handle the user authentication with JWT and for saving or removing liked/disliked shops and also for user registration.
 
+## Project structure
+
+the `src/app/services` contains injectable services for authentication and for communicating with rest endpoints. 
+the `src/app/utils` contains some helper classes and functions.
+the `src/app/models` contains model classes.
+the other folders `src/app/shops`,`src/app/liked-shops`,`src/app/register` and `src/app/login`are components.
+
 ## FourSquare Api
 
 the [FourSquare api](https://developer.foursquare.com/) exposes some rest endpoints for searching nearby venues and for getting details about those venues and it does not require a billing account like google places api but it is less flexible.
