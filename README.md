@@ -26,6 +26,29 @@ witch explains why you won't get photos for the shops most of the time.
 
 the api gives you a client id and a secret id to identify your app.
 
+## ScreenShots
+
+User registration
+
+![Imgur](https://i.imgur.com/DVMoh7V.png)
+
+User login
+
+![Imgur](https://i.imgur.com/TFMKfhU.png)
+
+Display of nearby shops sorted by distance
+
+![Imgur](https://i.imgur.com/JcI2OsD.png)
+
+Liking shops
+
+![Imgur](https://i.imgur.com/ethk4pz.png)
+![Imgur](https://i.imgur.com/WdgiZ7H.png)
+
+Dislikng shops
+
+[Imgur](https://i.imgur.com/nVBWt3c.png)
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
