@@ -47,7 +47,7 @@ Liking shops
 
 Dislikng shops
 
-[Imgur](https://i.imgur.com/nVBWt3c.png)
+![Imgur](https://i.imgur.com/nVBWt3c.png)
 
 ## Development server
 
